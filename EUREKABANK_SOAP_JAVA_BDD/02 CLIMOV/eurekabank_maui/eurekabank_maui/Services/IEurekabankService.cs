@@ -1,3 +1,4 @@
+
 using Eurekabank_Maui.Models;
 
 namespace Eurekabank_Maui.Services
@@ -42,5 +43,16 @@ namespace Eurekabank_Maui.Services
         /// Obtiene la información del servidor actual
         /// </summary>
         ServidorConfig GetServidorInfo();
+
+        Task<List<Sucursal>> ListarSucursalesAsync();
+        Task<Sucursal> ObtenerSucursalAsync(string codigo);
+        Task<bool> CrearSucursalAsync(Sucursal sucursal);
+        Task<bool> ActualizarSucursalAsync(Sucursal sucursal);
+        Task<bool> EliminarSucursalAsync(string codigo);
+        Task<double> CalcularDistanciaEntreSucursalesAsync(string codigo1, string codigo2);
+        Task<Sucursal> EncontrarSucursalMasCercanaAsync(double latitud, double longitud);
+        Task<List<SucursalConDistancia>> ObtenerSucursalesConDistanciasAsync(double latitud, double longitud);
     }
+
+    
 }

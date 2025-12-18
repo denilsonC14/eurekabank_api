@@ -35,8 +35,20 @@
                             CornerRadius="10"
                             HeightRequest="40"
                             FontSize="12"/>
+                    
                 </Grid>
             </Frame>
+            <!-- ⭐ BOTÓN DE SUCURSALES - AQUÍ ⭐ -->
+            <Button Text="🏢 Ver Sucursales"
+                 Command="{Binding IrASucursalesCommand}"
+                 BackgroundColor="#9b59b6"
+                 TextColor="White"
+                 CornerRadius="15"
+                 HeightRequest="60"
+                 FontSize="18"
+                 FontAttributes="Bold"
+                 Margin="0,0,0,0"/>
+
 
             <!-- Sección de Consulta -->
             <Frame CornerRadius="15" 

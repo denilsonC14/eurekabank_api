@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Eurekabank_Maui.ViewModels"
+             xmlns:models="clr-namespace:Eurekabank_Maui.Models"
+             x:Class="Eurekabank_Maui.Views.SucursalesPage"
+             x:DataType="viewmodels:SucursalesViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="20" RowSpacing="15">
+
+        <!-- Header con ubicación -->
+        <Frame Grid.Row="0" CornerRadius="15" Padding="15" BackgroundColor="#3498db">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <VerticalStackLayout Grid.Column="0">
+                    <Label Text="📍 Mi Ubicación" 
+                           TextColor="White" 
+                           FontSize="16" 
+                           FontAttributes="Bold"/>
+                    <Label Text="{Binding MiLatitud, StringFormat='Lat: {0:F6}'}" 
+                           TextColor="White" 
+                           FontSize="12"/>
+                    <Label Text="{Binding MiLongitud, StringFormat='Lng: {0:F6}'}" 
+                           TextColor="White" 
+                           FontSize="12"/>
+                </VerticalStackLayout>
+
+                <Button Grid.Column="1"
+                        Text="📍"
+                        Command="{Binding ObtenerUbicacionCommand}"
+                        BackgroundColor="White"
+                        TextColor="#3498db"
+                        CornerRadius="10"
+                        WidthRequest="50"
+                        HeightRequest="50"/>
+            </Grid>
+        </Frame>
+
+        <!-- Tabs -->
+        <Grid Grid.Row="1">
+            <CollectionView ItemsSource="{Binding Sucursales}"
+                           SelectedItem="{Binding SucursalSeleccionada}"
+                           SelectionMode="None"
+                           IsVisible="{Binding MostrarMapa, Converter={StaticResource InverseBoolConverter}}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Sucursal">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="✏️ Editar"
+                                              BackgroundColor="#3498db"
+                                              Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SucursalesViewModel}}, Path=EditarSucursalCommand}"
+                                              CommandParameter="{Binding .}"/>
+                                    <SwipeItem Text="🗑️ Eliminar"
+                                              BackgroundColor="#e74c3c"
+                                              Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SucursalesViewModel}}, Path=EliminarSucursalCommand}"
+                                              CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame Margin="0,5" Padding="15" CornerRadius="10" HasShadow="True">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SucursalesViewModel}}, Path=EditarSucursalCommand}"
+                                                         CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="5">
+                                    <Label Grid.Row="0"
+                                           Text="{Binding Nombre}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"/>
+                                    <Label Grid.Row="1"
+                                           Text="{Binding Ubicacion}"
+                                           FontSize="14"
+                                           TextColor="Gray"/>
+                                    <Label Grid.Row="2"
+                                           Text="{Binding Telefono, StringFormat='📞 {0}'}"
+                                           FontSize="12"/>
+                                    <BoxView Grid.Row="3"
+                                             HeightRequest="3"
+                                             Color="{Binding EstadoColor}"
+                                             CornerRadius="2"/>
+                                    <Label Grid.Row="4"
+                                           Text="← Desliza para editar o eliminar"
+                                           FontSize="10"
+                                           TextColor="LightGray"
+                                           HorizontalOptions="End"/>
+                                </Grid>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Vista de sucursales cercanas -->
+            <CollectionView ItemsSource="{Binding SucursalesCercanas}"
+                           SelectedItem="{Binding SucursalConDistanciaSeleccionada}"
+                           SelectionMode="Single"
+                           IsVisible="{Binding MostrarMapa}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:SucursalConDistancia">
+                        <Frame Margin="0,5" Padding="15" CornerRadius="10" HasShadow="True">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <Label Text="{Binding Sucursal.Nombre}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"/>
+                                    <Label Text="{Binding Sucursal.Ciudad}"
+                                           FontSize="12"
+                                           TextColor="Gray"/>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1"
+                                       Text="{Binding DistanciaTexto}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="#3498db"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <!-- Botones de acción -->
+        <Grid Grid.Row="2" RowDefinitions="Auto,Auto" RowSpacing="10">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
+                <Button Grid.Column="0"
+                        Text="🔄 Recargar"
+                        Command="{Binding CargarSucursalesCommand}"
+                        BackgroundColor="#3498db"
+                        TextColor="White"
+                        CornerRadius="10"/>
+                <Button Grid.Column="1"
+                        Text="➕"
+                        Command="{Binding NuevaSucursalCommand}"
+                        BackgroundColor="#e67e22"
+                        TextColor="White"
+                        CornerRadius="25"
+                        WidthRequest="50"
+                        HeightRequest="50"
+                        FontSize="24"
+                        ToolTipProperties.Text="Nueva sucursal"/>
+                <Button Grid.Column="2"
+                        Text="{Binding TextoBotonVista}"
+                        Command="{Binding AlternarVistaCommand}"
+                        BackgroundColor="#27ae60"
+                        TextColor="White"
+                        CornerRadius="10"/>
+            </Grid>
+
+            <!-- Botón de Mapa -->
+            <Button Grid.Row="1"
+                    Text="🗺️ Ver Mapa Completo"
+                    Clicked="OnVerMapaClicked"
+                    BackgroundColor="#9b59b6"
+                    TextColor="White"
+                    CornerRadius="10"
+                    FontSize="16"
+                    FontAttributes="Bold"/>
+        </Grid>
+
+        <!-- Indicador de carga -->
+        <ActivityIndicator Grid.RowSpan="3"
+                          IsRunning="{Binding IsBusy}"
+                          IsVisible="{Binding IsBusy}"
+                          Color="#3498db"
+                          VerticalOptions="Center"
+                          HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

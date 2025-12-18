@@ -52,7 +52,7 @@ namespace Eurekabank_Maui.Models
                     Tipo = TipoServidor.SoapJava,
                     Nombre = "SOAP Java",
                     Descripcion = "Jakarta EE Web Services",
-                    Url = "http://10.40.20.70:8080/Eurobank_Soap_Java/EurekabankWS",
+                    Url = "http://10.40.18.16:8080/Eurobank_Soap_Java/EurekabankWS",
                     IconoColor = "#007396",
                     Tecnologia = "JAX-WS / GlassFish"
                 },
@@ -61,7 +61,7 @@ namespace Eurekabank_Maui.Models
                     Tipo = TipoServidor.RestDotNet,
                     Nombre = "REST .NET",
                     Descripcion = "ASP.NET Core Web API",
-                    Url = "http://10.40.20.70:5111/api",
+                    Url = "http://10.40.18.16:5111/api",
                     IconoColor = "#68217A",
                     Tecnologia = ".NET 8.0"
                 },

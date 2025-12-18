@@ -2,6 +2,7 @@ using Eurekabank_Maui.Models;
 using Eurekabank_Maui.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Eurekabank_Maui.Views;
 
 namespace Eurekabank_Maui.ViewModels
 {
@@ -14,10 +15,11 @@ namespace Eurekabank_Maui.ViewModels
         private string _mensajeEstado;
         private bool _mostrarMensaje;
         private string _accionColor = "#512BD4";
-
+        
         public MainViewModel(IEurekabankService service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+
             
             var serverInfo = _service.GetServidorInfo();
             Title = $"Eurekabank - {serverInfo.Nombre}";
@@ -30,6 +32,14 @@ namespace Eurekabank_Maui.ViewModels
             RetiroCommand = new Command(async () => await RealizarRetiroAsync(), () => CanExecuteTransaccion());
             TransferenciaCommand = new Command(async () => await RealizarTransferenciaAsync(), () => CanExecuteTransferencia());
             CerrarSesionCommand = new Command(async () => await CerrarSesionAsync());
+            IrASucursalesCommand = new Command(async () => await IrASucursales());
+
+        }
+        private async Task IrASucursales()
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(
+                new SucursalesPage(_service)
+            );
         }
 
         public ObservableCollection<Movimiento> Movimientos { get; }
@@ -95,6 +105,7 @@ namespace Eurekabank_Maui.ViewModels
         public ICommand RetiroCommand { get; }
         public ICommand TransferenciaCommand { get; }
         public ICommand CerrarSesionCommand { get; }
+        public ICommand IrASucursalesCommand { get; }
 
         public event EventHandler CerrarSesionSolicitado;
 
@@ -325,5 +336,7 @@ namespace Eurekabank_Maui.ViewModels
                 CerrarSesionSolicitado?.Invoke(this, EventArgs.Empty);
             }
         }
+
+        
     }
 }

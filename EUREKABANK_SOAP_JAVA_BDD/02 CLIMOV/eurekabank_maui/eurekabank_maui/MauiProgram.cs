@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls.Hosting;
 
 namespace Eurekabank_Maui
 {
@@ -11,10 +12,17 @@ namespace Eurekabank_Maui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiMaps()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                })
+                .ConfigureMauiHandlers(handlers =>
+                {
+#if ANDROID
+                    handlers.AddHandler(typeof(Microsoft.Maui.Controls.Maps.Map), typeof(Microsoft.Maui.Maps.Handlers.MapHandler));
+#endif
                 });
 
 #if DEBUG

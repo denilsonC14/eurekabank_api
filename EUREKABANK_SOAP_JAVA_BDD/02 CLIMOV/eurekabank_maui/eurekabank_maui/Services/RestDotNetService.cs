@@ -209,5 +209,348 @@ namespace Eurekabank_Maui.Services
             public bool Authenticated { get; set; }
             public string Username { get; set; }
         }
+        #region Métodos de Sucursales
+
+        /// <summary>
+        /// Listar todas las sucursales
+        /// </summary>
+        public async Task<List<Sucursal>> ListarSucursalesAsync()
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"📋 REST .NET - Listando sucursales");
+
+                var response = await _httpClient.GetAsync("api/sucursales");
+
+                System.Diagnostics.Debug.WriteLine($"📨 REST .NET ListarSucursales: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Debug.WriteLine($"📨 Response content: {content}");
+
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<Sucursal>>>(_jsonOptions);
+
+                    System.Diagnostics.Debug.WriteLine($"✅ REST .NET - Sucursales encontradas: {result?.Data?.Count ?? 0}");
+
+                    return result?.Data ?? new List<Sucursal>();
+                }
+
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET - Error al listar sucursales: {response.StatusCode}");
+                return new List<Sucursal>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET ListarSucursales - Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack: {ex.StackTrace}");
+                return new List<Sucursal>();
+            }
+        }
+
+        /// <summary>
+        /// Obtener sucursal por código
+        /// </summary>
+        public async Task<Sucursal> ObtenerSucursalAsync(string codigo)
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"🔍 REST .NET - Obteniendo sucursal: {codigo}");
+
+                var response = await _httpClient.GetAsync($"api/sucursales/{codigo}");
+
+                System.Diagnostics.Debug.WriteLine($"📨 REST .NET ObtenerSucursal: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Debug.WriteLine($"📨 Response content: {content}");
+
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<Sucursal>>(_jsonOptions);
+
+                    System.Diagnostics.Debug.WriteLine($"✅ REST .NET - Sucursal encontrada: {result?.Data?.Nombre}");
+
+                    return result?.Data;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET - Sucursal no encontrada: {response.StatusCode}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET ObtenerSucursal - Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack: {ex.StackTrace}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Crear nueva sucursal
+        /// </summary>
+        public async Task<bool> CrearSucursalAsync(Sucursal sucursal)
+        {
+            try
+            {
+                var request = new
+                {
+                    codigo = sucursal.Codigo,
+                    nombre = sucursal.Nombre,
+                    ciudad = sucursal.Ciudad,
+                    direccion = sucursal.Direccion,
+                    contadorCuentas = sucursal.ContadorCuentas,
+                    latitud = sucursal.Latitud,
+                    longitud = sucursal.Longitud,
+                    telefono = sucursal.Telefono,
+                    email = sucursal.Email,
+                    estado = sucursal.Estado
+                };
+
+                var content = new StringContent(
+                    JsonSerializer.Serialize(request),
+                    Encoding.UTF8,
+                    "application/json");
+
+                System.Diagnostics.Debug.WriteLine($"➕ REST .NET - Creando sucursal: {sucursal.Codigo}");
+                System.Diagnostics.Debug.WriteLine($"📤 Request: {JsonSerializer.Serialize(request)}");
+
+                var response = await _httpClient.PostAsync("api/sucursales", content);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"📨 REST .NET CrearSucursal: {response.StatusCode}");
+                System.Diagnostics.Debug.WriteLine($"📨 Response: {responseContent}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    System.Diagnostics.Debug.WriteLine($"✅ REST .NET - Sucursal creada exitosamente");
+                    return true;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"❌ REST .NET - Error al crear sucursal: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET CrearSucursal - Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack: {ex.StackTrace}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Actualizar sucursal existente
+        /// </summary>
+        public async Task<bool> ActualizarSucursalAsync(Sucursal sucursal)
+        {
+            try
+            {
+                var request = new
+                {
+                    codigo = sucursal.Codigo,
+                    nombre = sucursal.Nombre,
+                    ciudad = sucursal.Ciudad,
+                    direccion = sucursal.Direccion,
+                    contadorCuentas = sucursal.ContadorCuentas,
+                    latitud = sucursal.Latitud,
+                    longitud = sucursal.Longitud,
+                    telefono = sucursal.Telefono,
+                    email = sucursal.Email,
+                    estado = sucursal.Estado
+                };
+
+                var content = new StringContent(
+                    JsonSerializer.Serialize(request),
+                    Encoding.UTF8,
+                    "application/json");
+
+                System.Diagnostics.Debug.WriteLine($"✏️ REST .NET - Actualizando sucursal: {sucursal.Codigo}");
+                System.Diagnostics.Debug.WriteLine($"📤 Request: {JsonSerializer.Serialize(request)}");
+
+                var response = await _httpClient.PutAsync($"api/sucursales/{sucursal.Codigo}", content);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"📨 REST .NET ActualizarSucursal: {response.StatusCode}");
+                System.Diagnostics.Debug.WriteLine($"📨 Response: {responseContent}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    System.Diagnostics.Debug.WriteLine($"✅ REST .NET - Sucursal actualizada exitosamente");
+                    return true;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"❌ REST .NET - Error al actualizar sucursal: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET ActualizarSucursal - Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack: {ex.StackTrace}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Eliminar sucursal (soft delete - cambiar estado a INACTIVO)
+        /// </summary>
+        public async Task<bool> EliminarSucursalAsync(string codigo)
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"🗑️ REST .NET - Eliminando sucursal: {codigo}");
+
+                var response = await _httpClient.DeleteAsync($"api/sucursales/{codigo}");
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"📨 REST .NET EliminarSucursal: {response.StatusCode}");
+                System.Diagnostics.Debug.WriteLine($"📨 Response: {responseContent}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    System.Diagnostics.Debug.WriteLine($"✅ REST .NET - Sucursal eliminada exitosamente");
+                    return true;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"❌ REST .NET - Error al eliminar sucursal: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET EliminarSucursal - Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack: {ex.StackTrace}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Calcular distancia entre dos sucursales
+        /// </summary>
+        public async Task<double> CalcularDistanciaEntreSucursalesAsync(string codigo1, string codigo2)
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"📏 REST .NET - Calculando distancia: {codigo1} → {codigo2}");
+
+                var response = await _httpClient.GetAsync($"api/sucursales/distancia/{codigo1}/{codigo2}");
+
+                System.Diagnostics.Debug.WriteLine($"📨 REST .NET CalcularDistancia: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<DistanciaResponse>>(_jsonOptions);
+
+                    System.Diagnostics.Debug.WriteLine($"✅ REST .NET - Distancia calculada: {result?.Data?.DistanciaKm ?? 0} km");
+
+                    return result?.Data?.DistanciaKm ?? 0.0;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET - Error al calcular distancia: {response.StatusCode}");
+                return -1.0;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET CalcularDistancia - Error: {ex.Message}");
+                return -1.0;
+            }
+        }
+
+        /// <summary>
+        /// Encontrar sucursal más cercana
+        /// </summary>
+        public async Task<Sucursal> EncontrarSucursalMasCercanaAsync(double latitud, double longitud)
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"🎯 REST .NET - Buscando sucursal más cercana: {latitud:F6}, {longitud:F6}");
+
+                var response = await _httpClient.GetAsync($"api/sucursales/mas-cercana?latitud={latitud}&longitud={longitud}");
+
+                System.Diagnostics.Debug.WriteLine($"📨 REST .NET SucursalMasCercana: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<SucursalConDistanciaResponse>>(_jsonOptions);
+
+                    System.Diagnostics.Debug.WriteLine($"✅ REST .NET - Sucursal más cercana: {result?.Data?.Sucursal?.Nombre} a {result?.Data?.DistanciaKm} km");
+
+                    return result?.Data?.Sucursal;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET - No se encontró sucursal cercana: {response.StatusCode}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET SucursalMasCercana - Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Obtener sucursales con distancias desde una posición
+        /// </summary>
+        public async Task<List<SucursalConDistancia>> ObtenerSucursalesConDistanciasAsync(double latitud, double longitud)
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"🎯 REST .NET - Obteniendo sucursales con distancias: {latitud:F6}, {longitud:F6}");
+
+                var response = await _httpClient.GetAsync($"api/sucursales/con-distancias?latitud={latitud}&longitud={longitud}&limite=50");
+
+                System.Diagnostics.Debug.WriteLine($"📨 REST .NET SucursalesConDistancias: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Debug.WriteLine($"📨 Response content: {content}");
+
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<SucursalConDistanciaResponse>>>(_jsonOptions);
+
+                    // Convertir de SucursalConDistanciaResponse a SucursalConDistancia
+                    var sucursalesConDistancia = result?.Data?.Select(s => new SucursalConDistancia
+                    {
+                        Sucursal = s.Sucursal,
+                        DistanciaKm = s.DistanciaKm
+                    }).ToList() ?? new List<SucursalConDistancia>();
+
+                    System.Diagnostics.Debug.WriteLine($"✅ REST .NET - Sucursales con distancias: {sucursalesConDistancia.Count}");
+
+                    return sucursalesConDistancia;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET - Error al obtener sucursales con distancias: {response.StatusCode}");
+                return new List<SucursalConDistancia>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ REST .NET SucursalesConDistancias - Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack: {ex.StackTrace}");
+                return new List<SucursalConDistancia>();
+            }
+        }
+
+        #endregion
+
+        #region Clases de Response para Sucursales
+
+        private class DistanciaResponse
+        {
+            public double DistanciaKm { get; set; }
+            public string SucursalOrigen { get; set; }
+            public string SucursalDestino { get; set; }
+            public double? TiempoEstimadoMinutos { get; set; }
+        }
+
+        private class SucursalConDistanciaResponse
+        {
+            public Sucursal Sucursal { get; set; }
+            public double DistanciaKm { get; set; }
+            public double? TiempoEstimadoMinutos { get; set; }
+        }
+
+        #endregion
     }
 }

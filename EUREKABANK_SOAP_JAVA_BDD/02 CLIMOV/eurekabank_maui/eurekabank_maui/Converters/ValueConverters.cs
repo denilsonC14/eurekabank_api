@@ -49,7 +49,7 @@ namespace Eurekabank_Maui.Converters
         {
             if (value is bool boolValue)
                 return !boolValue;
-            
+
             return false;
         }
 
@@ -57,8 +57,24 @@ namespace Eurekabank_Maui.Converters
         {
             if (value is bool boolValue)
                 return !boolValue;
-            
+
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Converter para verificar si un valor no es null
+    /// </summary>
+    public class IsNotNullConverter : IValueConverter
+    {
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            return value != null;
+        }
+
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

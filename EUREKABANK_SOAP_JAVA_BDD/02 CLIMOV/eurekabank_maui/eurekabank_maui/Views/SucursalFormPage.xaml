@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Eurekabank_Maui.ViewModels"
+             x:Class="Eurekabank_Maui.Views.SucursalFormPage"
+             x:DataType="viewmodels:SucursalFormViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto,*,Auto" Padding="20" RowSpacing="15">
+
+            <!-- Header -->
+            <Frame Grid.Row="0" CornerRadius="15" Padding="15" BackgroundColor="#3498db">
+                <Label Text="{Binding Titulo}"
+                       TextColor="White"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"/>
+            </Frame>
+
+            <!-- Formulario -->
+            <VerticalStackLayout Grid.Row="1" Spacing="15">
+
+                <!-- Código (solo lectura si es edición) -->
+                <Frame Padding="15" CornerRadius="10" BackgroundColor="#f8f9fa">
+                    <VerticalStackLayout>
+                        <Label Text="📋 Código *"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2c3e50"/>
+                        <Entry Text="{Binding Codigo}"
+                               Placeholder="Ej: 001"
+                               IsReadOnly="{Binding EsEdicion}"
+                               MaxLength="10"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Nombre -->
+                <Frame Padding="15" CornerRadius="10" BackgroundColor="#f8f9fa">
+                    <VerticalStackLayout>
+                        <Label Text="🏢 Nombre *"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2c3e50"/>
+                        <Entry Text="{Binding Nombre}"
+                               Placeholder="Ej: Sucursal Centro"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Ciudad -->
+                <Frame Padding="15" CornerRadius="10" BackgroundColor="#f8f9fa">
+                    <VerticalStackLayout>
+                        <Label Text="🌆 Ciudad *"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2c3e50"/>
+                        <Entry Text="{Binding Ciudad}"
+                               Placeholder="Ej: Quito"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Dirección -->
+                <Frame Padding="15" CornerRadius="10" BackgroundColor="#f8f9fa">
+                    <VerticalStackLayout>
+                        <Label Text="📍 Dirección *"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2c3e50"/>
+                        <Entry Text="{Binding Direccion}"
+                               Placeholder="Ej: Av. Amazonas N24-03"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Teléfono -->
+                <Frame Padding="15" CornerRadius="10" BackgroundColor="#f8f9fa">
+                    <VerticalStackLayout>
+                        <Label Text="📞 Teléfono *"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2c3e50"/>
+                        <Entry Text="{Binding Telefono}"
+                               Placeholder="Ej: 02-2234567"
+                               Keyboard="Telephone"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Email -->
+                <Frame Padding="15" CornerRadius="10" BackgroundColor="#f8f9fa">
+                    <VerticalStackLayout>
+                        <Label Text="✉️ Email *"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2c3e50"/>
+                        <Entry Text="{Binding Email}"
+                               Placeholder="Ej: sucursal@eurekabank.com"
+                               Keyboard="Email"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Coordenadas -->
+                <Frame Padding="15" CornerRadius="10" BackgroundColor="#e8f5e9">
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="🗺️ Coordenadas GPS"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#2c3e50"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Start"/>
+                            <Button Text="📍 Obtener mi ubicación"
+                                    Command="{Binding ObtenerUbicacionCommand}"
+                                    BackgroundColor="#27ae60"
+                                    TextColor="White"
+                                    CornerRadius="8"
+                                    Padding="10,5"
+                                    FontSize="12"
+                                    HorizontalOptions="End"/>
+                        </HorizontalStackLayout>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="Latitud *" FontSize="12" TextColor="Gray"/>
+                                <Entry Text="{Binding Latitud}"
+                                       Placeholder="-0.229800"
+                                       Keyboard="Numeric"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Longitud *" FontSize="12" TextColor="Gray"/>
+                                <Entry Text="{Binding Longitud}"
+                                       Placeholder="-78.524900"
+                                       Keyboard="Numeric"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Estado -->
+                <Frame Padding="15" CornerRadius="10" BackgroundColor="#f8f9fa">
+                    <VerticalStackLayout>
+                        <Label Text="📊 Estado"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2c3e50"/>
+                        <Picker SelectedItem="{Binding Estado}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>ACTIVO</x:String>
+                                    <x:String>INACTIVO</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Label Text="* Campos obligatorios"
+                       FontSize="12"
+                       TextColor="Gray"
+                       HorizontalOptions="Center"/>
+
+            </VerticalStackLayout>
+
+            <!-- Botones de acción -->
+            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,20,0,0">
+                <Button Grid.Column="0"
+                        Text="❌ Cancelar"
+                        Command="{Binding CancelarCommand}"
+                        BackgroundColor="#e74c3c"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="50"/>
+                <Button Grid.Column="1"
+                        Text="{Binding TextoBotonGuardar}"
+                        Command="{Binding GuardarCommand}"
+                        BackgroundColor="#27ae60"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="50"/>
+            </Grid>
+
+            <!-- Indicador de carga -->
+            <ActivityIndicator Grid.RowSpan="3"
+                              IsRunning="{Binding IsBusy}"
+                              IsVisible="{Binding IsBusy}"
+                              Color="#3498db"
+                              VerticalOptions="Center"
+                              HorizontalOptions="Center"/>
+        </Grid>
+    </ScrollView>
+</ContentPage>

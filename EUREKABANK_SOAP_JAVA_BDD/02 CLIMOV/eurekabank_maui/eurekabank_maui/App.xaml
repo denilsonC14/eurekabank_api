@@ -10,6 +10,7 @@
             <converters:EqualConverter x:Key="EqualConverter" />
             <converters:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
 
             <!-- Colores -->
             <Color x:Key="Primary">#512BD4</Color>

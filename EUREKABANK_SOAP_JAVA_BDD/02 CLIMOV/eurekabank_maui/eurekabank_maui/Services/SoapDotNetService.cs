@@ -254,5 +254,49 @@ namespace Eurekabank_Maui.Services
 
             return movimientos;
         }
+        // Al final de la clase SoapDotNetService, agregar:
+
+        #region Métodos de Sucursales - No implementados
+        public Task<List<Sucursal>> ListarSucursalesAsync()
+        {
+            return Task.FromResult(new List<Sucursal>());
+        }
+
+        public Task<Sucursal> ObtenerSucursalAsync(string codigo)
+        {
+            return Task.FromResult<Sucursal>(null);
+        }
+
+        public Task<bool> CrearSucursalAsync(Sucursal sucursal)
+        {
+            return Task.FromResult(false);
+        }
+
+        public Task<bool> ActualizarSucursalAsync(Sucursal sucursal)
+        {
+            return Task.FromResult(false);
+        }
+
+        public Task<bool> EliminarSucursalAsync(string codigo)
+        {
+            return Task.FromResult(false);
+        }
+
+        public Task<double> CalcularDistanciaEntreSucursalesAsync(string codigo1, string codigo2)
+        {
+            return Task.FromResult(0.0);
+        }
+
+        public Task<Sucursal> EncontrarSucursalMasCercanaAsync(double latitud, double longitud)
+        {
+            return Task.FromResult<Sucursal>(null);
+        }
+
+        public Task<List<SucursalConDistancia>> ObtenerSucursalesConDistanciasAsync(double latitud, double longitud)
+        {
+            return Task.FromResult(new List<SucursalConDistancia>());
+        }
+        #endregion
+
     }
 }
